@@ -1,11 +1,15 @@
 package com.example.pertemuan12.ui.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
@@ -19,6 +23,34 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.pertemuan12.model.Mahasiswa
+
+@Composable
+fun MhsLayout(
+    mahasiswa: List<Mahasiswa>, // List data mahasiswa
+    modifier: Modifier = Modifier,
+    onDetailClick: (Mahasiswa) -> Unit, // Fungsi untuk tampilkan detail mahasiswa
+    onDeleteClick: (Mahasiswa) -> Unit = {} // Fungsi untuk hapus data mahasiswa
+) {
+    // LazyColumn untuk menampilkan list mahasiswa
+    LazyColumn(
+        modifier = modifier, // Modifier untuk styling (opsional)
+        contentPadding = PaddingValues(16.dp), // Padding untuk seluruh list
+        verticalArrangement = Arrangement.spacedBy(16.dp) // Jarak antar item dalam list
+    ) {
+        items(mahasiswa) { mahasiswa -> // Untuk setiap mahasiswa di dalam list
+            MhsCard(
+                mahasiswa = mahasiswa, // Kirim data mahasiswa ke MhsCard
+                modifier = Modifier
+                    .fillMaxWidth() // Membuat kartu memakan seluruh lebar layar
+                    .clickable { onDetailClick(mahasiswa) }, // Fungsi detail ketika item diklik
+                onDeleteClick = { // Fungsi delete ketika tombol delete di kartu diklik
+                    onDeleteClick(mahasiswa)
+                }
+            )
+        }
+    }
+}
+
 
 @Composable
 fun MhsCard(
