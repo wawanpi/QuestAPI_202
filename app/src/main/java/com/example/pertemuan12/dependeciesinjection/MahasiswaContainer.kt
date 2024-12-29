@@ -10,14 +10,14 @@ import retrofit2.Retrofit
 
 // Interface yang mendefinisikan container aplikasi untuk menyimpan semua dependency
 interface AppContainer {
-    val kontakRepository: MahasiswaRepository
+    val mahasiswaRepository: MahasiswaRepository
 }
 
 // Implementasi AppContainer khusus untuk Mahasiswa
 class MahasiswaContainer : AppContainer {
 
     // URL dasar untuk mengakses API backend
-    private val baseUrl = "http://10.0.2.2:8000/umyTI/"
+    private val baseUrl = "http://10.0.2.2:80/umyTI/"
     // Note: 10.0.2.2 adalah localhost untuk emulator. Ganti dengan IP perangkat jika diakses dari perangkat lain.
 
     // Konfigurasi Json untuk menangani data yang tidak dikenal (ignoreUnknownKeys)
@@ -35,7 +35,7 @@ class MahasiswaContainer : AppContainer {
     }
 
     // Lazy initialization untuk repository Mahasiswa, menggunakan NetworkMahasiswaRepository
-    override val kontakRepository: MahasiswaRepository by lazy {
+    override val mahasiswaRepository: MahasiswaRepository by lazy {
         NetworkMahasiswaRepository(mahasiswaService) // Menggunakan MahasiswaService sebagai dependensinya
     }
 }
