@@ -15,23 +15,90 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pertemuan12.R
 import com.example.pertemuan12.model.Mahasiswa
+import com.example.pertemuan12.ui.costumwidget.CostumeTopAppBar
+import com.example.pertemuan12.ui.navigation.DestinasiNavigasi
 import com.example.pertemuan12.ui.viewmodel.HomeUiState
+import com.example.pertemuan12.ui.viewmodel.HomeViewModel
+import com.example.pertemuan12.ui.viewmodel.PenyediaViewModel
+
+object DestinasiHome: DestinasiNavigasi {
+    override val route = "home"
+    override val titleRes = "Home Mhs"
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen(
+    navigateToItemEntry: () -> Unit, // Callback untuk navigasi ke halaman tambah mahasiswa
+    modifier: Modifier = Modifier, // Modifier untuk mengatur layout composable
+    onDetailClick: (String) -> Unit = {}, // Callback untuk navigasi ke detail mahasiswa berdasarkan NIM
+    viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory) // ViewModel untuk memuat data mahasiswa
+) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior() // Mengatur perilaku scrolling pada TopAppBar
+
+    // Scaffold: Struktur dasar layar dengan komponen seperti TopBar, FAB, dan konten
+    Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), // Menambahkan nested scroll behavior
+        topBar = {
+            CostumeTopAppBar(
+                title = DestinasiHome.titleRes, // Menggunakan judul dari objek `DestinasiHome`
+                canNavigateBack = false, // Tidak memungkinkan kembali karena ini halaman utama
+                scrollBehavior = scrollBehavior, // Menautkan scroll behavior ke TopAppBar
+                onRefreshClick = {
+                    viewModel.getMhs() // Memuat ulang data mahasiswa ketika tombol refresh diklik
+                }
+            )
+        },
+        floatingActionButton = {
+            // Tombol floating untuk menambahkan data mahasiswa
+            FloatingActionButton(
+                onClick = navigateToItemEntry, // Navigasi ke halaman tambah mahasiswa
+                shape = MaterialTheme.shapes.medium, // Mengatur bentuk tombol floating
+                modifier = Modifier.padding(18.dp) // Memberikan padding
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add, // Ikon plus untuk tombol
+                    contentDescription = "Add Mahasiswa" // Deskripsi konten ikon
+                )
+            }
+        },
+    ) { innerPadding ->
+        // Konten utama layar (bagian `Body`) yang menampilkan daftar mahasiswa atau status lain
+        HomeStatus(
+            homeUiState = viewModel.mhsUIState, // State UI dari ViewModel: Loading, Success, atau Error
+            retryAction = { viewModel.getMhs() }, // Callback untuk mencoba lagi memuat data
+            modifier = Modifier.padding(innerPadding), // Memberikan padding berdasarkan `Scaffold`
+            onDetailClick = onDetailClick, // Aksi ketika item detail mahasiswa diklik
+            onDeleteClick = {
+                viewModel.deleteMhs(it.nim) // Hapus mahasiswa berdasarkan NIM
+                viewModel.getMhs()         // Memuat ulang data setelah penghapusan
+            }
+        )
+    }
+}
+
 
 @Composable
 fun HomeStatus(
@@ -190,3 +257,4 @@ fun MhsCard(
         }
     }
 }
+
