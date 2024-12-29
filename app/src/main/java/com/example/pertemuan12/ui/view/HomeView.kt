@@ -1,5 +1,6 @@
 package com.example.pertemuan12.ui.view
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -21,8 +23,36 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.pertemuan12.R
 import com.example.pertemuan12.model.Mahasiswa
+
+@Composable
+fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
+    // Kolom sebagai layout utama
+    Column(
+        modifier = modifier, // Modifier untuk menyesuaikan style (opsional)
+        verticalArrangement = Arrangement.Center, // Untuk menempatkan elemen secara vertikal di tengah
+        horizontalAlignment = Alignment.CenterHorizontally // Untuk menempatkan elemen secara horizontal di tengah
+    ) {
+        // Menampilkan gambar error (misalnya icon koneksi gagal)
+        Image(
+            painter = painterResource(id = R.drawable.wifieror),
+            contentDescription = "" // Menambahkannya untuk aksesibilitas
+        )
+
+        // Menampilkan pesan error ("Loading failed" atau lainnya)
+        Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
+
+        // Tombol untuk mencoba ulang
+        Button(onClick = retryAction) {
+            Text(stringResource(R.string.retry)) // Menampilkan text tombol "Retry"
+        }
+    }
+}
+
 
 @Composable
 fun MhsLayout(
@@ -50,7 +80,6 @@ fun MhsLayout(
         }
     }
 }
-
 
 @Composable
 fun MhsCard(
