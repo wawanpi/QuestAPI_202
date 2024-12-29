@@ -3,10 +3,12 @@ package com.example.pertemuan12.ui.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,6 +31,46 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.pertemuan12.R
 import com.example.pertemuan12.model.Mahasiswa
+import com.example.pertemuan12.ui.viewmodel.HomeUiState
+
+@Composable
+fun HomeStatus(
+    homeUiState: HomeUiState, // UI state yang bisa berupa Loading, Success atau Error
+    retryAction: () -> Unit, // Fungsi untuk mencoba lagi setelah error
+    modifier: Modifier = Modifier, // Modifier untuk styling tampilan
+    onDeleteClick: (Mahasiswa) -> Unit = {}, // Fungsi untuk handle aksi delete mahasiswa
+    onDetailClick: (String) -> Unit // Fungsi untuk handle klik detail mahasiswa
+) {
+    when (homeUiState) {
+        // Jika dalam kondisi loading
+        is HomeUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
+
+        // Jika data berhasil diambil
+        is HomeUiState.Success -> {
+            if (homeUiState.mahasiswa.isEmpty()) {
+                return Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+                    Text(text = "Tidak ada data kontak")
+                }
+            } else {
+                // Jika data ada, tampilkan layout mahasiswa
+                MhsLayout(
+                    mahasiswa = homeUiState.mahasiswa,
+                    modifier = modifier.fillMaxWidth(),
+                    onDetailClick = {
+                        onDetailClick(it.nim) // OnDetailClick memberi akses detail mahasiswa
+                    },
+                    onDeleteClick = {
+                        onDeleteClick(it) // OnDeleteClick memberi aksi delete
+                    }
+                )
+            }
+        }
+
+        // Jika terjadi error
+        is HomeUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize())
+    }
+}
+
 
 @Composable
 fun OnLoading(modifier: Modifier = Modifier) {
@@ -39,7 +81,6 @@ fun OnLoading(modifier: Modifier = Modifier) {
         contentDescription = stringResource(R.string.loading) // Deskripsi gambar untuk aksesibilitas
     )
 }
-
 
 @Composable
 fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
