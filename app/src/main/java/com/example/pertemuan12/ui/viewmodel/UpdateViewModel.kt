@@ -6,57 +6,45 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pertemuan12.model.Mahasiswa
+
 import com.example.pertemuan12.repository.MahasiswaRepository
 import kotlinx.coroutines.launch
 
-// ViewModel untuk proses Update data Mahasiswa
-class UpdateViewModel(private val mhs: MahasiswaRepository) : ViewModel() {
-    // State untuk menyimpan inputan user
+class UpdateViewModel(private val mhsRepository: MahasiswaRepository) : ViewModel() {
+
     var uiState by mutableStateOf(UpdateUiState())
-        private set // Agar tidak dapat diubah langsung dari luar
+        private set
 
-    // Update state input jika ada perubahan data
-    fun updateUpdateMhsState(updateUiEvent: UpdateUiEvent) {
-        uiState = UpdateUiState(updateUiEvent = updateUiEvent)
-    }
-
-    // Fungsi untuk update data mahasiswa
-    fun updateMhs() {
-        viewModelScope.launch { // Jalankan di background (async)
+    // Fetch existing Mahasiswa data based on ID and set the state
+    fun loadMahasiswaData(mahasiswaId: String) {
+        viewModelScope.launch {
             try {
-                mhs.updateMahasiswa(
-                    nim = uiState.updateUiEvent.nim, // Parameter NIM
-                    mahasiswa = uiState.updateUiEvent.toMhs() // Parameter Mahasiswa
-                )
+                val mahasiswa = mhsRepository.getMahasiswabyNim(mahasiswaId)
+                uiState = UpdateUiState(insertUiEvent = mahasiswa.tolnsertUiEvent())
             } catch (e: Exception) {
-                e.printStackTrace() // Cetak error untuk debugging
+                e.printStackTrace()
             }
         }
     }
+
+    // Update Mahasiswa data
+    fun updateMhs() {
+        viewModelScope.launch {
+            try {
+                val nim = uiState.insertUiEvent.nim
+                val mahasiswa = uiState.insertUiEvent.toMhs()
+                mhsRepository.updateMahasiswa(nim, mahasiswa)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun updateInsertMhsState(insertUiEvent: InsertUiEvent) {
+        uiState = UpdateUiState(insertUiEvent = insertUiEvent)
+    }
 }
 
-// Data State untuk menyimpan state UI
 data class UpdateUiState(
-    val updateUiEvent: UpdateUiEvent = UpdateUiEvent() // Default kosong
-)
-
-// Event user: input NIM, Nama, Alamat, dll. untuk update
-data class UpdateUiEvent(
-    val nim: String = "",
-    val nama: String = "",
-    val alamat: String = "",
-    val jenisKelamin: String = "",
-    val kelas: String = "",
-    val angkatan: String = ""
-)
-
-// Konversi dari UpdateUiEvent ke Mahasiswa (format backend)
-fun UpdateUiEvent.toMhs(): Mahasiswa = Mahasiswa(
-    nim = nim,
-    nama = nama,
-    alamat = alamat,
-    jenisKelamin = jenisKelamin,
-    kelas = kelas,
-    angkatan = angkatan
+    val insertUiEvent: InsertUiEvent = InsertUiEvent()
 )
