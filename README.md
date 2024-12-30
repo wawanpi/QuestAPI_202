@@ -1,16 +1,18 @@
-Halamn Home
-![image](https://github.com/user-attachments/assets/85716fcf-7d70-44ae-b601-7288132c66a9)
-Halaman Tambah Data
-![image](https://github.com/user-attachments/assets/76bd82df-6998-4aa9-8c92-db92cdec4a53)
-Data Tersimpan
-![image](https://github.com/user-attachments/assets/f05ecf34-d3b0-4d83-a834-f64912c14399)
-Halam Detail 
-![image](https://github.com/user-attachments/assets/f7d3dfca-1386-456b-92ba-c10324d7c4d4)
-Halaman Update
-![image](https://github.com/user-attachments/assets/9fe85706-0e85-475a-b332-1a37835ecd55)
-Setelah Update
-![image](https://github.com/user-attachments/assets/e4e1b488-6213-4a29-8e0a-56bc97b8595d)
+Tampilan Home 
+![image](https://github.com/user-attachments/assets/118ac72f-6d72-478a-a477-9c91de053b1b)
+Tampilan Insert
+![image](https://github.com/user-attachments/assets/3dc1ef29-4e99-4710-88be-494a814b0c7e)
+Setelah Insert Data
+![image](https://github.com/user-attachments/assets/56993fbc-ba96-4daa-82af-da7a80fea1fb)
+Tampilan Detail
+![image](https://github.com/user-attachments/assets/0a148fd1-3d44-41c4-b94e-a80895b474b9)
+Tampilan Update Data
+![image](https://github.com/user-attachments/assets/a6f1f801-9582-49b9-92c6-a77a93a8a920)
+Setellah Update data
+![image](https://github.com/user-attachments/assets/73601ad6-0f71-46e3-8ce5-1937f7287089)
 Hapus Data
-![image](https://github.com/user-attachments/assets/310594b7-9dfc-435a-930f-0a8daee71d7c)
-![image](https://github.com/user-attachments/assets/8a443bf4-e5b0-4713-abe4-ec662655323c)
+![image](https://github.com/user-attachments/assets/7d866329-0bad-4583-bf7e-95916d521210)
+
+
+
 
