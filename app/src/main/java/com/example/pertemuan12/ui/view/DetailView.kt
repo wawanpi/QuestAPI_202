@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -67,6 +69,8 @@ fun DetailScreen(
                 navigateUp = navigateBack
             )
         }
+
+
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             when (detailUiState) {
@@ -132,14 +136,19 @@ fun DetailContent(
                 )
             }
         }
-        Button(
-            onClick = { onUpdateClick(mahasiswa.nim) },
-            modifier = Modifier.fillMaxWidth()
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
         ) {
-            Text(text = "Update Data")
+            FloatingActionButton(
+                onClick = { onUpdateClick(mahasiswa.nim) }
+            ) {
+                Icon(imageVector = Icons.Default.Edit, contentDescription = "Update Data")
+            }
         }
     }
 }
+
 
 
 @Composable
