@@ -16,9 +16,56 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pertemuan12.ui.costumwidget.CostumeTopAppBar
 import com.example.pertemuan12.ui.viewmodel.InsertUiEvent
+import com.example.pertemuan12.ui.viewmodel.PenyediaViewModel
 import com.example.pertemuan12.ui.viewmodel.UpdateUiState
+import com.example.pertemuan12.ui.viewmodel.UpdateViewModel
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UpdateScreen(
+    nim: String, // Parameter buat ambil NIM (ID unik mahasiswa)
+    navigateBack: () -> Unit, // Fungsi navigasi balik ke layar sebelumnya
+    modifier: Modifier = Modifier,
+    viewModel: UpdateViewModel = viewModel(factory = PenyediaViewModel.Factory) // ViewModel yang ngelola data & logic
+) {
+    val coroutineScope = rememberCoroutineScope() // CoroutineScope buat trigger background job
+
+    // Jalankan efek waktu pertama kali masuk layar
+    LaunchedEffect(nim) {
+        viewModel.loadMahasiswaData(nim) // Panggil fungsi load data di ViewModel
+    }
+
+    // Scaffold untuk susunan UI
+    Scaffold(
+        topBar = {
+            CostumeTopAppBar(
+                title = "Update Mahasiswa", // Judul di AppBar
+                canNavigateBack = true, // Tombol Back aktif
+                navigateUp = navigateBack // Fungsi back
+            )
+        }
+    ) { innerPadding ->
+        // Isi layar form update
+        UpdateBody(
+            updateUiState = viewModel.uiState, // Ambil UI state dari ViewModel
+            onSiswaValueChange = viewModel::updateInsertMhsState, // Handle perubahan input
+            onSaveClick = {
+                coroutineScope.launch {
+                    viewModel.updateMhs() // Panggil ViewModel buat update data
+                    navigateBack() // Balik ke layar sebelumnya
+                }
+            },
+            modifier = Modifier
+                .padding(innerPadding) // Atur padding biar gak tabrakan sama AppBar
+                .verticalScroll(rememberScrollState()) // Bikin layout bisa discroll
+                .fillMaxWidth() // Layout full width
+        )
+    }
+}
 
 
 
