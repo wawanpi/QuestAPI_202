@@ -48,7 +48,6 @@ class HomeViewModel(private val mhs: MahasiswaRepository) : ViewModel() {
         viewModelScope.launch { // Lagi-lagi coroutine biar lancar
             try {
                 mhs.deleteMahasiswa(nim) // Hapus data di repo
-                getMhs()
             } catch (e: IOException) {
                 HomeUiState.Error // Kalau koneksi bermasalah
             } catch (e: HttpException) {
